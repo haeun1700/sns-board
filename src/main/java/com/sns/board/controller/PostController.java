@@ -1,6 +1,7 @@
 package com.sns.board.controller;
 
 import com.sns.board.model.Post;
+import com.sns.board.model.PostPatchRequestBody;
 import com.sns.board.model.PostPostRequestBody;
 import com.sns.board.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,12 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostPostRequestBody postPostRequestBody){
         Post post = postService.createPost(postPostRequestBody);
+        return ResponseEntity.ok(post); // 200 ok를 내려줌 -> 201create가 별도가 존재. responsebody까지 반환x
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody PostPatchRequestBody postPatchRequestBody){
+        Post post = postService.updatePost(id, postPatchRequestBody);
         return ResponseEntity.ok(post);
     }
 }
