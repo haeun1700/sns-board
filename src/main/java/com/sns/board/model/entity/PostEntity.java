@@ -48,7 +48,8 @@ public class PostEntity{
     // 수동으로 값 넣지 않아도 자동으로 시간 설정
     @PrePersist
     private void prePersist(){
-        createdAt = ZonedDateTime.now();
+        this.createdAt = ZonedDateTime.now();
+        this.updatedAt = this.createdAt;
     }
     @PreUpdate
     private void preUpdate(){
