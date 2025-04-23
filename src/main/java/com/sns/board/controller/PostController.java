@@ -29,10 +29,8 @@ public class PostController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPost(@PathVariable Long id){
-        Optional<Post> matchingPost = postService.getPost(id);
-        return matchingPost
-                .map(ResponseEntity::ok) //값이 있으면 ok반환
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Post matchingPost = postService.getPost(id);
+        return ResponseEntity.ok(matchingPost);
     }
 
     @PostMapping
