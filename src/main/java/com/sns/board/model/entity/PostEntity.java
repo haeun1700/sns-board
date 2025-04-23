@@ -12,7 +12,6 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-//@SQLDelete(sql = "UPDATE \"post\" SET deleteat = CURRENT_TIMESTAMP WHERE postid = ?")
 @Table(name = "post")
 @SQLDelete(sql = "UPDATE \"post\" SET deleteat = CURRENT_TIMESTAMP WHERE postid = ?")
 @SQLRestriction("deleteAt IS NULL")
