@@ -37,35 +37,28 @@ public class PostService {
 
 
     public Post createPost(PostPostRequestBody postPostRequestBody) {
-        Long newPostId = posts.stream().mapToLong(Post::getId).max().orElse(0L)+1;
+        //1. 요청 DTO로부터 데이터 넣기
+        PostEntity postEntity = new PostEntity();
+        postEntity.setBody(postPostRequestBody.body()); // body데이터 넣기
 
-        Post newPost = new Post(newPostId, postPostRequestBody.body(), ZonedDateTime.now());
-        posts.add(newPost);
-
-        return newPost;
+        //2. 저장된 엔티티 정보를 DTO로 반환
+        return Post.from(postEntityRepository.save(postEntity));
     }
 
     public Post updatePost(Long id, PostPatchRequestBody postPatchRequestBody) {
-        // id에 해당하는 post가져오기
-        Optional<Post> optionalPost =
-                posts.stream().filter(post -> post.getId().equals(id)).findFirst();
-        // 그 id body값을 받아 다시 그 아이디에 add해주기
-        if(optionalPost.isPresent()){
-            Post updatePost = optionalPost.get();
-            updatePost.setBody(postPatchRequestBody.body());
-
-            return updatePost;
-        } else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다.");
-        }
+        PostEntity post = postEntityRepository
+                .findById(id) // 해당 데이터가 존재하지 않을 경우도 있어 서비스에서 예외 던지기, 만약 optional로 감싸면 컨트롤러에서 예외를 제어할 필요가 있다.
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 게시글을 찾을 수 없습니다."));
+       post.setBody(postPatchRequestBody.body());
+       return Post.from(postEntityRepository.save(post));
     }
 
-    public void deletePost(Long id){
-        Optional<Post> deletePost = posts.stream().filter(post -> id.equals(post.getId())).findFirst();
-        if(deletePost.isPresent()){
-            posts.remove(deletePost.get());
-        } else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"해당 게시글이 존재하지 않습니다.");
-        }
+    public void deletePost(Long id) {
+        PostEntity postEntity = postEntityRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 게시글을 찾을 수 없습니다."));
+
+        postEntityRepository.delete(postEntity);
     }
+
 }
