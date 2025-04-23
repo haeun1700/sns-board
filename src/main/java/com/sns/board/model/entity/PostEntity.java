@@ -44,4 +44,14 @@ public class PostEntity{
     public int hashCode() {
         return Objects.hash(getPostId(), getBody(), getCreatedAt(), getUpdatedAt());
     }
+
+    // 수동으로 값 넣지 않아도 자동으로 시간 설정
+    @PrePersist
+    private void prePersist(){
+        createdAt = ZonedDateTime.now();
+    }
+    @PreUpdate
+    private void preUpdate(){
+        updatedAt = ZonedDateTime.now();
+    }
 }
