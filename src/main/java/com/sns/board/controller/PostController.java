@@ -4,6 +4,7 @@ import com.sns.board.model.Post;
 import com.sns.board.model.PostPatchRequestBody;
 import com.sns.board.model.PostPostRequestBody;
 import com.sns.board.service.PostService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
+@Slf4j
 public class PostController {
 
     @Autowired
@@ -18,6 +20,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<Post>> getPosts(){
+        log.info("GET /api/v1/posts");
         List<Post> posts = postService.getPosts();
         return ResponseEntity.ok(posts); //response는 json 리스트로 반환
     }
@@ -28,24 +31,28 @@ public class PostController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPost(@PathVariable Long id){
+        log.info("GET /api/v1/posts/{}", id);
         Post matchingPost = postService.getPost(id);
         return ResponseEntity.ok(matchingPost);
     }
 
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostPostRequestBody postPostRequestBody){
+        log.info("POST /api/v1/posts");
         Post post = postService.createPost(postPostRequestBody);
         return ResponseEntity.ok(post); // 200 ok를 내려줌 -> 201create가 별도가 존재. responsebody까지 반환x
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody PostPatchRequestBody postPatchRequestBody){
+        log.info("Patch /api/v1/posts/{}", id);
         Post post = postService.updatePost(id, postPatchRequestBody);
         return ResponseEntity.ok(post);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id){
+        log.info("DELETE /api/v1/posts/{}", id);
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
