@@ -18,3 +18,9 @@ spring:
     user:
       name: board-admin
       password: board-admin-password
+logging:
+  # trace < debug < info < warn < error
+  level:
+    root: INFO
+
+
