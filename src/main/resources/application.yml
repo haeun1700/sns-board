@@ -8,12 +8,12 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-      format_sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
   security:
     user:
       name: board-admin
